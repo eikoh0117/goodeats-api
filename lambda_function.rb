@@ -38,9 +38,18 @@ def lambda_handler(event:, context:)
   matched_restaurants = []
   # restaurants = search(small_area, genre_code)
   restaurants = search('X150', 'G001')
+
   begin
     restaurants.each do |restaurant|
-      reviews = GoodEatsReviews.where(restaurant_id: restaurant['id'])
+      reviews = GoodEatsReviews.scan(
+        filter_expression: "contains(#B, :b)",
+        expression_attribute_names: {
+          "#B" => "restaurant_id"
+        },
+        expression_attribute_values: {
+          ":b" => restaurant['id']
+        }
+      )
       matched_restaurants.push(
         {
           detail: restaurant,
@@ -59,4 +68,5 @@ def lambda_handler(event:, context:)
      count: matched_restaurants.count,
      restaurants: matched_restaurants
   }
+
 end
