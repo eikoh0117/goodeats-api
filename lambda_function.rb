@@ -50,12 +50,10 @@ def search(small_area, genre_code)
 end
 
 def lambda_handler(event:, context:)
-  # small_area = event['small_area']　# ホットペッパーAPIで定義されている小エリアコード
-  # genre_code = event['genre'] # ホットペッパーAPIで定義されているジャンルコード
-
+  small_area = event['small_area'] # ホットペッパーAPIで定義されている小エリアコード
+  genre_code = event['genre_code'] # ホットペッパーAPIで定義されているジャンルコード
   matched_restaurants = []
-  # restaurants = search(small_area, genre_code)
-  restaurants = search('X150', 'G001')
+  restaurants = search(small_area, genre_code)
 
   begin
     restaurants.each do |restaurant|
