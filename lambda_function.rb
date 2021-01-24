@@ -23,12 +23,30 @@ def fetch_data(resource) # URIを引数として入力するとJSON形式でレ�
 end
 
 def search(small_area, genre_code)
+  restaurants = []
   resource = "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=#{ENV['RECRUIT_API_KEY']}&small_area=#{small_area}&order=4&genre=#{genre_code}&count=100&format=json"
   response = fetch_data(resource)
   results = response['results']
   hit_count = results['results_available']
   return if hit_count === 0
   shops = results['shop']
+  shops.each do |shop|
+    restaurants.push(shop)
+  end
+  if hit_count > 100
+    total_pages = (hit_count / 100).to_i
+    1...total_pages.times do |i|
+      second_resource = "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=#{ENV['RECRUIT_API_KEY']}&small_area=#{area}&order=4&genre=#{genre_code}&count=100&start=#{(i + 1) * 100 + 1}&format=json"
+      second_response = fetch_data(second_resource)
+      second_results = second_response['results']
+      next if second_results['results_returned'] === "0"
+      second_shops = second_results['shop']
+      second_shops.each do |shop|
+        restaurants.push(shop)
+      end
+    end
+  end
+  restaurants
 end
 
 def lambda_handler(event:, context:)
