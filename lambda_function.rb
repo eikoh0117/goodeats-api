@@ -43,12 +43,8 @@ def lambda_handler(event:, context:)
     restaurants.each do |restaurant|
       reviews = GoodEatsReviews.scan(
         filter_expression: "contains(#B, :b)",
-        expression_attribute_names: {
-          "#B" => "restaurant_id"
-        },
-        expression_attribute_values: {
-          ":b" => restaurant['id']
-        }
+        expression_attribute_names: {"#B" => "restaurant_id"},
+        expression_attribute_values: {":b" => restaurant['id']}
       )
       matched_restaurants.push(
         {
@@ -68,5 +64,4 @@ def lambda_handler(event:, context:)
      count: matched_restaurants.count,
      restaurants: matched_restaurants
   }
-
 end
