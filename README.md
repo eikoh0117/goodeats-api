@@ -1,5 +1,9 @@
 # GoodEats API
 Lambda関数として配置し、API Gatewayでエンドポイントを設定
+
+## 使用言語
+Ruby 2.7.0
+
 ## 用途
 
 ### Request
